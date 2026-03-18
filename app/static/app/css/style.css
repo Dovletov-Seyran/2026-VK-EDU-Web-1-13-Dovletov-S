@@ -1,0 +1,568 @@
+body {
+  background-color: #f0f5f7;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  flex: 1;
+}
+
+/* Навбар */
+.my-bg {
+  background-color: #034159;
+  padding: 14px 24px;
+  border-bottom: 3px solid #7ebfbf;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.title {
+  font-size: 22px;
+  color: white !important;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+}
+
+.my-input {
+  width: 200px;
+  height: 36px;
+  border: 2px solid #7ebfbf;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  padding: 0 14px;
+  transition: all 0.2s;
+}
+.my-input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+.my-input:focus {
+  outline: none;
+  border-color: #bf9f3f;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 3px rgba(191, 159, 63, 0.2);
+}
+
+.button-title {
+  height: 36px;
+  padding: 0 20px;
+  background-color: #bf9f3f;
+  color: #032f40;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+.button-title:hover {
+  background-color: #d4b040;
+  color: #032f40;
+}
+.button-title:active {
+  background-color: #a8882e !important;
+  color: white !important;
+}
+
+.nav-username {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.nav-link-white {
+  color: #7ebfbf;
+  font-size: 13px;
+  margin-right: 8px;
+}
+.nav-link-white:hover {
+  color: #bf9f3f;
+  text-decoration: none;
+}
+
+.nav-avatar {
+  width: 38px;
+  height: 38px;
+  border: 2px solid #7ebfbf;
+  border-radius: 8px;
+  background: #032f40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Карточка вопроса */
+.question-card {
+  background: white;
+  border: 1px solid #ddeaee;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(3, 65, 89, 0.06);
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+.question-card:hover {
+  border-color: #7ebfbf;
+  box-shadow: 0 4px 12px rgba(3, 65, 89, 0.1);
+}
+
+.q-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0369a1;
+  display: block;
+  margin-bottom: 5px;
+}
+.q-title:hover {
+  color: #034159;
+  text-decoration: underline;
+}
+
+.q-text {
+  font-size: 14px;
+  color: #607d8b;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* Блок голосования */
+.vote-box {
+  border: 1.5px solid #ddeaee;
+  border-radius: 8px;
+  width: 42px;
+  text-align: center;
+  overflow: hidden;
+  background: white;
+}
+.vote-box span {
+  display: block;
+  font-weight: 700;
+  font-size: 15px;
+  color: #034159;
+  background: #f0f5f7;
+  padding: 4px 0;
+  border-top: 1px solid #ddeaee;
+  border-bottom: 1px solid #ddeaee;
+}
+.vote-box button {
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  padding: 5px 0;
+  color: #7ebfbf;
+  font-size: 12px;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.vote-box button:hover {
+  background: #e8f4f4;
+  color: #034159;
+}
+
+/* Аватар в карточке */
+.q-avatar {
+  width: 48px;
+  height: 48px;
+  border: 1.5px solid #ddeaee;
+  border-radius: 8px;
+  background: #e8f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Тег */
+.tag-link {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid #b8d8e0;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #034159;
+  background: #e8f4f4;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.tag-link:hover {
+  background: #034159;
+  color: white;
+  border-color: #034159;
+  text-decoration: none;
+}
+
+.tag-python {
+  color: #2563eb;
+}
+.tag-mysql {
+  color: #dc2626;
+}
+.tag-django {
+  color: #16a34a;
+}
+.tag-firefox {
+  color: #ea580c;
+}
+
+/* Сайдбар */
+.sidebar-card {
+  background: white;
+  border: 1px solid #ddeaee;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(3, 65, 89, 0.06);
+}
+.sidebar-card h5 {
+  font-weight: 700;
+  font-size: 15px;
+  color: #032f40;
+  border-bottom: 2px solid #7ebfbf;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+
+.member-link {
+  display: block;
+  padding: 6px 0;
+  font-size: 14px;
+  color: #0369a1;
+  border-bottom: 1px solid #f0f5f7;
+  transition:
+    color 0.15s,
+    padding-left 0.15s;
+}
+.member-link:last-child {
+  border-bottom: none;
+}
+.member-link:hover {
+  color: #bf9f3f;
+  text-decoration: none;
+  padding-left: 4px;
+}
+
+/* Пагинация */
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  border: 1.5px solid #ddeaee;
+  border-radius: 8px;
+  background: white;
+  padding: 0 10px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.page-btn:hover {
+  background: #7ebfbf;
+  color: white;
+  border-color: #7ebfbf;
+}
+.page-btn.active {
+  background: #034159;
+  color: white;
+  border-color: #034159;
+}
+
+/* Поля ввода */
+.field {
+  width: 100%;
+  border: 1.5px solid #ddeaee;
+  border-radius: 8px;
+  padding: 9px 13px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  background: white;
+}
+.field:focus {
+  border-color: #7ebfbf;
+  box-shadow: 0 0 0 3px rgba(126, 191, 191, 0.2);
+}
+textarea.field {
+  min-height: 150px;
+  resize: vertical;
+}
+
+/* Основная кнопка */
+.btn-main {
+  background: #034159;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 26px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-main:hover {
+  background: #056080;
+}
+
+/* Белый блок */
+.white-card {
+  background: white;
+  border: 1px solid #ddeaee;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(3, 65, 89, 0.06);
+}
+.white-card.correct {
+  border-color: #7ebfbf;
+  border-left: 4px solid #7ebfbf;
+  background: #f5fbfb;
+}
+
+/* Заголовки страниц */
+.page-title {
+  color: #032f40;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* Ссылка "answer (3)" */
+.answer-link {
+  color: #0369a1;
+  font-size: 13px;
+}
+.answer-link:hover {
+  color: #034159;
+}
+
+/* Текст "Tags:" */
+.tags-label {
+  color: #aaa;
+  font-size: 13px;
+}
+
+/* Текст вопроса на странице question.html */
+.question-body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+/* Текст ответа */
+.answer-text {
+  font-size: 14px;
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+
+/* Correct label */
+.correct-label {
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #aaa;
+}
+.correct-label.is-correct {
+  color: #7ebfbf;
+}
+.correct-checkbox {
+  accent-color: #7ebfbf;
+  margin-right: 4px;
+}
+
+/* HR разделителя */
+.section-divider {
+  border: none;
+  border-top: 1px solid #ddeaee;
+  margin: 16px 0;
+}
+
+/* Форма (метки + поля) */
+.form-label-col {
+  width: 110px;
+  padding-top: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #032f40;
+}
+.form-label-col-sm {
+  width: 80px;
+  padding-top: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #032f40;
+}
+
+/* Аватар на странице настроек */
+.avatar-preview {
+  width: 90px;
+  height: 90px;
+  border: 2px solid #ddeaee;
+  border-radius: 8px;
+  background: #e8f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.file-label {
+  border: 1px solid #ddeaee;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: #aaa;
+  background: #f0f5f7;
+}
+
+/* Тег-заголовок на странице тега */
+.tag-badge {
+  background: #e8f4f4;
+  border: 1.5px solid #7ebfbf;
+  border-radius: 20px;
+  padding: 2px 14px;
+  font-size: 16px;
+}
+
+/* Адаптив */
+@media (max-width: 576px) {
+  .title {
+    font-size: 16px;
+  }
+  .my-input {
+    width: 110px;
+    height: 30px;
+  }
+  .button-title {
+    height: 30px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+  .my-bg {
+    padding: 10px 12px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 1024px) {
+  .title {
+    font-size: 20px;
+  }
+  .my-input {
+    width: 260px;
+  }
+  .my-bg {
+    padding: 14px 20px;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1600px) {
+  .title {
+    font-size: 22px;
+  }
+  .my-input {
+    width: 340px;
+  }
+  .my-bg {
+    padding: 16px 36px;
+  }
+}
+
+@media (min-width: 1601px) {
+  .title {
+    font-size: 28px;
+  }
+  .my-input {
+    width: 480px;
+    height: 38px;
+  }
+  .button-title {
+    height: 38px;
+    font-size: 16px;
+  }
+  .my-bg {
+    padding: 18px 80px;
+  }
+}
+
+/* Футер */
+.site-footer {
+  background-color: #034159;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  border-top: 3px solid #7ebfbf;
+  width: 100%;
+  box-sizing: border-box;
+}
+.site-footer strong {
+  color: white;
+}
+
+/* Ссылка Hot Questions */
+.hot-link {
+  color: #bf9f3f;
+  font-weight: 600;
+  font-size: 14px;
+}
+.hot-link:hover {
+  color: #a8882e;
+}
+
+/* Время */
+.q-time {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Ошибки и подсказки форм */
+.form-error {
+  background: #fff0f0;
+  border: 1px solid #f5b8b8;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #c0392b;
+  margin-bottom: 16px;
+}
+
+.field-error {
+  font-size: 12px;
+  color: #c0392b;
+  margin-top: 4px;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+.field.is-error {
+  border-color: #f5b8b8;
+}
+
+/* Состояния vote-box */
+.vote-box.liked span {
+  color: #7EBFBF;
+}
+.vote-box.liked button:first-child {
+  color: #7EBFBF;
+  background: #e8f4f4;
+}
+
+.vote-box.disliked span {
+  color: #c0392b;
+}
+.vote-box.disliked button:last-child {
+  color: #c0392b;
+  background: #fff0f0;
+}

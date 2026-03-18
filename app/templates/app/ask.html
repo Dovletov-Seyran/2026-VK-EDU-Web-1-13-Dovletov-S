@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}AskPupkin — Новый вопрос{% endblock %}
+
+{% block navbar_right %}
+<div class="d-flex gap-3">
+  <a href="#" class="nav-link-white">log in</a>
+  <a href="#" class="nav-link-white">register</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<h4 class="page-title">New Question</h4>
+<div class="form-error">
+  Please fix the errors below.
+</div>
+<div class="white-card">
+  <form method="post" action="#">
+    <div class="row align-items-start mb-3 g-2">
+      <div class="col-auto form-label-col-sm">Title</div>
+      <div class="col">
+        <input class="field" type="text" name="title" placeholder="How to build a moon park?">
+        <div class="field-error">This field is required.</div>
+        <div class="field-hint">Max 255 characters.</div>
+      </div>
+    </div>
+    <div class="row align-items-start mb-3 g-2">
+      <div class="col-auto form-label-col-sm">Text</div>
+      <div class="col">
+        <textarea class="field" name="text" placeholder="Describe your question..."></textarea>
+        <div class="field-error">This field is required.</div>
+      </div>
+    </div>
+    <div class="row align-items-start mb-3 g-2">
+      <div class="col-auto form-label-col-sm">Tags</div>
+      <div class="col">
+        <input class="field" type="text" name="tags" placeholder="moon, park, puzzle">
+        <div class="field-hint">Enter up to 3 tags separated by commas.</div>
+      </div>
+    </div>
+    <div class="row g-2">
+      <div class="col-auto form-label-col-sm"></div>
+      <div class="col">
+        <button type="submit" class="btn-main">ASK!</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

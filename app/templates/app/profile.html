@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}AskPupkin — Settings{% endblock %}
+{% block navbar_right %}
+<div class="d-flex align-items-center gap-2">
+  <div class="nav-avatar">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#7EBFBF"
+      stroke-width="1.5"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="2" />
+      <line x1="2" y1="2" x2="22" y2="22" />
+      <line x1="22" y1="2" x2="2" y2="22" />
+    </svg>
+  </div>
+  <div>
+    <div class="nav-username">Dr. Pepper</div>
+    <div>
+      <a href="#" class="nav-link-white">settings</a>
+      <a href="#" class="nav-link-white">log out</a>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block content %}
+<h4 class="page-title">Settings: Dr. Pepper</h4>
+<div class="form-error">
+  Please fix the errors below.
+</div>
+<div class="white-card">
+  <form method="post" action="#">
+    <div class="row align-items-start mb-3 g-2">
+      <div class="col-auto form-label-col">Login</div>
+      <div class="col">
+        <input class="field" type="text" name="username" value="dr_pepper" />
+        <div class="field-error">This field is required.</div>
+        <div class="field-hint">Max 50 characters.</div>
+      </div>
+    </div>
+    <div class="row align-items-start mb-3 g-2">
+      <div class="col-auto form-label-col">Email</div>
+      <div class="col">
+        <input
+          class="field"
+          type="email"
+          name="email"
+          value="dr.pepper@mail.ru"
+        />
+        <div class="field-error">Invalid email address.</div>
+        <div class="field-hint">Enter a valid email.</div>
+      </div>
+    </div>
+    <div class="row align-items-start mb-3 g-2">
+      <div class="col-auto form-label-col">NickName</div>
+      <div class="col">
+        <input class="field" type="text" name="nickname" value="Dr. Pepper" />
+        <div class="field-error">This field is required.</div>
+        <div class="field-hint">Max 50 characters.</div>
+      </div>
+    </div>
+    <div class="row align-items-start mb-3 g-2">
+      <div class="col-auto form-label-col">Upload avatar</div>
+      <div class="col">
+        <div class="avatar-preview">
+          <svg
+            width="44"
+            height="44"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#7EBFBF"
+            stroke-width="1.2"
+          >
+            <rect x="2" y="2" width="20" height="20" rx="2" />
+            <line x1="2" y1="2" x2="22" y2="22" />
+            <line x1="22" y1="2" x2="2" y2="22" />
+          </svg>
+        </div>
+        <div class="d-flex gap-2 align-items-center">
+          <span class="file-label" id="file-label">c:\avatar.jpg</span>
+          <label
+            for="avatar-input"
+            class="btn-main"
+            style="
+              padding: 5px 14px;
+              font-size: 13px;
+              cursor: pointer;
+              margin: 0;
+            "
+            >choose</label
+          >
+          <input
+            id="avatar-input"
+            type="file"
+            name="avatar"
+            accept="image/*"
+            style="display: none"
+            onchange="
+              document.getElementById('file-label').textContent =
+                this.files[0]?.name || 'c:\\avatar.jpg'
+            "
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row g-2">
+      <div class="col-auto form-label-col"></div>
+      <div class="col">
+        <button type="submit" class="btn-main">Save</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}AskPupkin — Tag: bender{% endblock %}
+
+{% block navbar_right %}
+<div class="d-flex align-items-center gap-2">
+  <div class="nav-avatar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
+      <rect x="2" y="2" width="20" height="20" rx="2"/>
+      <line x1="2" y1="2" x2="22" y2="22"/>
+      <line x1="22" y1="2" x2="2" y2="22"/>
+    </svg>
+  </div>
+  <div>
+    <div class="nav-username">Dr. Pepper</div>
+    <div>
+      <a href="#" class="nav-link-white">settings</a>
+      <a href="#" class="nav-link-white">log out</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<h4 class="page-title">Tag: <span class="tag-badge">bender</span></h4>
+
+<div class="question-card">
+  <div class="d-flex gap-3 align-items-start">
+    <div class="vote-box flex-shrink-0"><button>▲</button><span>5</span><button>▼</button></div>
+    <div class="q-avatar flex-shrink-0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
+        <rect x="2" y="2" width="20" height="20" rx="2"/>
+        <line x1="2" y1="2" x2="22" y2="22"/>
+        <line x1="22" y1="2" x2="2" y2="22"/>
+      </svg>
+    </div>
+    <div class="flex-grow-1">
+      <a href="#" class="q-title">How to build a moon park?</a>
+      <p class="q-text">Guys, I have trouble with a moon park. Can't find the black-jack...</p>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <a href="#" class="answer-link">answer (3)</a>
+        <span class="tags-label">Tags:</span>
+        <a href="#" class="tag-link">black-jack</a>
+        <a href="#" class="tag-link">bender</a>
+        <span class="q-time">asked 2 hours ago</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="d-flex gap-3 align-items-start">
+    <div class="vote-box flex-shrink-0"><button>▲</button><span>5</span><button>▼</button></div>
+    <div class="q-avatar flex-shrink-0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
+        <rect x="2" y="2" width="20" height="20" rx="2"/>
+        <line x1="2" y1="2" x2="22" y2="22"/>
+        <line x1="22" y1="2" x2="2" y2="22"/>
+      </svg>
+    </div>
+    <div class="flex-grow-1">
+      <a href="#" class="q-title">How to build a moon park?</a>
+      <p class="q-text">Guys, I have trouble with a moon park. Can't find the black-jack...</p>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <a href="#" class="answer-link">answer (3)</a>
+        <span class="tags-label">Tags:</span>
+        <a href="#" class="tag-link">black-jack</a>
+        <a href="#" class="tag-link">bender</a>
+        <span class="q-time">asked 2 hours ago</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="question-card">
+  <div class="d-flex gap-3 align-items-start">
+    <div class="vote-box flex-shrink-0"><button>▲</button><span>5</span><button>▼</button></div>
+    <div class="q-avatar flex-shrink-0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
+        <rect x="2" y="2" width="20" height="20" rx="2"/>
+        <line x1="2" y1="2" x2="22" y2="22"/>
+        <line x1="22" y1="2" x2="2" y2="22"/>
+      </svg>
+    </div>
+    <div class="flex-grow-1">
+      <a href="#" class="q-title">How to build a moon park?</a>
+      <p class="q-text">Guys, I have trouble with a moon park. Can't find the black-jack...</p>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <a href="#" class="answer-link">answer (3)</a>
+        <span class="tags-label">Tags:</span>
+        <a href="#" class="tag-link">black-jack</a>
+        <a href="#" class="tag-link">bender</a>
+        <span class="q-time">asked 2 hours ago</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex gap-2 mt-3">
+  <button class="page-btn active">1</button>
+  <button class="page-btn">2</button>
+  <button class="page-btn">3</button>
+  <button class="page-btn">...</button>
+  <button class="page-btn">53</button>
+</div>
+{% endblock %}

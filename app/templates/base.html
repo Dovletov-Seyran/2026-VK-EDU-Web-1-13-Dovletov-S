@@ -1,0 +1,78 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}AskPupkin{% endblock %}</title>
+    <link rel="stylesheet" href="{% static '/app/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static '/app/css/style.css' %}" />
+    <link rel="icon" href="{% static '/app/img/favicon-32x32.png' %}" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar my-bg">
+        <div class="container-fluid d-flex align-items-center gap-3">
+          <a class="title navbar-brand" href="/">Ask Pupkin</a>
+          <form class="d-flex align-items-center gap-2 mx-auto" role="search">
+            <input
+              class="form-control my-input"
+              type="search"
+              placeholder="Search"
+            />
+            <button class="button-title btn" type="submit">Ask!</button>
+          </form>
+          {% block navbar_right %}
+          <div class="d-flex gap-3">
+            <a href="#" class="nav-link-white">log in</a>
+            <a href="#" class="nav-link-white">register</a>
+          </div>
+          {% endblock %}
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div
+        class="container-fluid"
+        style="max-width: 1100px; margin: 28px auto; padding: 0 24px"
+      >
+        <div class="row g-4">
+          <div class="col-12 col-lg-8">{% block content %}{% endblock %}</div>
+
+          <div class="col-12 col-lg-4">
+            <div class="sidebar-card">
+              <h5>Popular Tags</h5>
+              <div class="d-flex flex-wrap gap-2">
+                <a href="#" class="tag-link">perl</a>
+                <a href="#" class="tag-link tag-python">python</a>
+                <a href="#" class="tag-link">TechnoPark</a>
+                <a href="#" class="tag-link tag-mysql">MySQL</a>
+                <a href="#" class="tag-link tag-django">django</a>
+                <a href="#" class="tag-link">Mail.Ru</a>
+                <a href="#" class="tag-link">Voloshin</a>
+                <a href="#" class="tag-link tag-firefox">Firefox</a>
+              </div>
+            </div>
+            <div class="sidebar-card">
+              <h5>Best Members</h5>
+              <a href="#" class="member-link">Mr. Freeman</a>
+              <a href="#" class="member-link">Dr. House</a>
+              <a href="#" class="member-link">Bender</a>
+              <a href="#" class="member-link">Queen Victoria</a>
+              <a href="#" class="member-link">V. Pupkin</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p style="margin: 0">
+        Made by <strong>Seyran</strong> · 2026 · VK Project
+      </p>
+    </footer>
+
+    <script src="{% static '/app/js/bootstrap.min.js' %}"></script>
+  </body>
+</html>
