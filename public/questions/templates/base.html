@@ -5,15 +5,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}AskPupkin{% endblock %}</title>
-    <link rel="stylesheet" href="{% static '/app/css/bootstrap.min.css' %}" />
-    <link rel="stylesheet" href="{% static '/app/css/style.css' %}" />
-    <link rel="icon" href="{% static '/app/img/favicon-32x32.png' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/bootstrap.min.css' %}"
+    />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="icon" href="{% static '/questions/img/favicon-32x32.png' %}" />
   </head>
   <body>
     <header>
       <nav class="navbar my-bg">
         <div class="container-fluid d-flex align-items-center gap-3">
-          <a class="title navbar-brand" href="{% url 'app:home' %}">Ask Pupkin</a>
+          <a class="title navbar-brand" href="{% url 'questions:home' %}"
+            >Ask Pupkin</a
+          >
           <form class="d-flex align-items-center gap-2 mx-auto" role="search">
             <input
               class="form-control my-input"
@@ -73,6 +78,6 @@
       </p>
     </footer>
 
-    <script src="{% static '/app/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
   </body>
 </html>
