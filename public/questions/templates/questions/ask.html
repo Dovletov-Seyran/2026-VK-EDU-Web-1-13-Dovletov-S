@@ -3,8 +3,8 @@
 
 {% block navbar_right %}
 <div class="d-flex gap-3">
-  <a href="#" class="nav-link-white">log in</a>
-  <a href="#" class="nav-link-white">register</a>
+      <a href="{% url 'core:login' %}" class="nav-link-white">log in</a>
+      <a href="{% url 'core:signup' %}" class="nav-link-white">register</a>
 </div>
 {% endblock %}
 

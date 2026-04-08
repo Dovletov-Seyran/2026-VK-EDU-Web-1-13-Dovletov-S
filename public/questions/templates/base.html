@@ -25,12 +25,14 @@
               type="search"
               placeholder="Search"
             />
-            <button class="button-title btn" type="submit">Ask!</button>
+            <a href="{% url 'questions:ask' %}">
+              <button class="button-title btn" type="button">Ask!</button>
+            </a>
           </form>
           {% block navbar_right %}
           <div class="d-flex gap-3">
-            <a href="#" class="nav-link-white">log in</a>
-            <a href="#" class="nav-link-white">register</a>
+            <a href="{% url 'core:login' %}" class="nav-link-white">log in</a>
+            <a href="{% url 'core:signup' %}" class="nav-link-white">register</a>
           </div>
           {% endblock %}
         </div>
@@ -49,14 +51,14 @@
             <div class="sidebar-card">
               <h5>Popular Tags</h5>
               <div class="d-flex flex-wrap gap-2">
-                <a href="#" class="tag-link">perl</a>
-                <a href="#" class="tag-link tag-python">python</a>
-                <a href="#" class="tag-link">TechnoPark</a>
-                <a href="#" class="tag-link tag-mysql">MySQL</a>
-                <a href="#" class="tag-link tag-django">django</a>
-                <a href="#" class="tag-link">Mail.Ru</a>
-                <a href="#" class="tag-link">Voloshin</a>
-                <a href="#" class="tag-link tag-firefox">Firefox</a>
+                <a href="{% url 'questions:tag' 'perl' %}" class="tag-link">perl</a>
+                <a href="{% url 'questions:tag' 'python' %}" class="tag-link tag-python">python</a>
+                <a href="{% url 'questions:tag' 'TechnoPark' %}" class="tag-link">TechnoPark</a>
+                <a href="{% url 'questions:tag' 'MySQL' %}" class="tag-link tag-mysql">MySQL</a>
+                <a href="{% url 'questions:tag' 'django' %}" class="tag-link tag-django">django</a>
+                <a href="{% url 'questions:tag' 'Mail.Ru' %}" class="tag-link">Mail.Ru</a>
+                <a href="{% url 'questions:tag' 'Voloshin' %}" class="tag-link">Voloshin</a>
+                <a href="{% url 'questions:tag' 'FireFox' %}" class="tag-link tag-firefox">Firefox</a>
               </div>
             </div>
             <div class="sidebar-card">
