@@ -13,7 +13,8 @@ def index(request):
 def question(request, question_id):
     question = {'id': question_id, 'title': f'Question {question_id}', 'text': 'Some text'}
     answers = [{'id': i, 'text': f'Answer {i}'} for i in range(1, 5)]
-    return render(request, "questions/question.html", {'question': question, 'answers': answers})
+    page = paginate(answers, request)
+    return render(request, "questions/question.html", {'question': question, 'page_answer': page.object_list, 'page': page})
 
 def tag(request, tag_name):
     questions = [
