@@ -3,14 +3,7 @@
 {%block navbar_right %}
 <div class="d-flex align-items-center gap-2">
   <div class="nav-avatar">
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#7EBFBF"
-      stroke-width="1.5"
-    >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
       <rect x="2" y="2" width="20" height="20" rx="2" />
       <line x1="2" y1="2" x2="22" y2="22" />
       <line x1="22" y1="2" x2="2" y2="22" />
@@ -27,6 +20,7 @@
 {% endblock %} {% block content %}
 <div class="d-flex align-items-baseline gap-3 mb-3">
   <h4 class="page-title m-0">Hot Questions</h4>
+  <a href="{% url 'questions:home' %}" class="hot-link">New Questions</a>
 </div>
 
 {% for question in page %}
@@ -62,19 +56,19 @@
 
 <div class="d-flex gap-2 mt-3">
   {% if page.has_previous %}
-    <button class="page-btn" onclick="window.location='?page={{ page.previous_page_number }}'">&#8592;</button>
+  <button class="page-btn" onclick="window.location='?page={{ page.previous_page_number }}'">&#8592;</button>
   {% endif %}
 
   {% for num in page.paginator.page_range %}
-    {% if num == page.number %}
-      <button class="page-btn active">{{ num }}</button>
-    {% else %}
-      <button class="page-btn" onclick="window.location='?page={{ num }}'">{{ num }}</button>
-    {% endif %}
+  {% if num == page.number %}
+  <button class="page-btn active">{{ num }}</button>
+  {% else %}
+  <button class="page-btn" onclick="window.location='?page={{ num }}'">{{ num }}</button>
+  {% endif %}
   {% endfor %}
 
   {% if page.has_next %}
-    <button class="page-btn" onclick="window.location='?page={{ page.next_page_number }}'">&#8594;</button>
+  <button class="page-btn" onclick="window.location='?page={{ page.next_page_number }}'">&#8594;</button>
   {% endif %}
 </div>
 {% endblock %}
