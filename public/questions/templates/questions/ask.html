@@ -3,8 +3,8 @@
 
 {% block navbar_right %}
 <div class="d-flex gap-3">
-  <a href="#" class="nav-link-white">log in</a>
-  <a href="#" class="nav-link-white">register</a>
+  <a href="{% url 'core:login' %}" class="nav-link-white">log in</a>
+  <a href="{% url 'core:signup' %}" class="nav-link-white">register</a>
 </div>
 {% endblock %}
 
@@ -15,6 +15,7 @@
 </div>
 <div class="white-card">
   <form method="post" action="#">
+    {% csrf_token %}
     <div class="row align-items-start mb-3 g-2">
       <div class="col-auto form-label-col-sm">Title</div>
       <div class="col">
