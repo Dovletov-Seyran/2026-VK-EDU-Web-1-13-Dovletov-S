@@ -36,7 +36,7 @@ class Command(BaseCommand):
                     password="password123",
                 )
             )
-        User.objects.bulk_create(users)
+        User.objects.bulk_create(users, batch_size=10000)
         users = list(User.objects.all())
         self.stdout.write(f"Created {len(users)} users")
 
@@ -44,7 +44,7 @@ class Command(BaseCommand):
         profiles = []
         for user in users:
             profiles.append(Profile(user=user))
-        Profile.objects.bulk_create(profiles)
+        Profile.objects.bulk_create(profiles, batch_size=10000)
         self.stdout.write(f"Created {len(profiles)} profiles")
 
         self.stdout.write("Creating tags...")
@@ -57,7 +57,7 @@ class Command(BaseCommand):
                     slug=slugify(title),
                 )
             )
-        Tag.objects.bulk_create(tags)
+        Tag.objects.bulk_create(tags, batch_size=10000)
         tags = list(Tag.objects.all())
         self.stdout.write(f"Created {len(tags)} tags")
 
@@ -72,7 +72,7 @@ class Command(BaseCommand):
                     user=random.choice(users),
                 )
             )
-        Question.objects.bulk_create(questions)
+        Question.objects.bulk_create(questions, batch_size=10000)
         questions = list(Question.objects.all())
         self.stdout.write(f"Created {len(questions)} questions")
 
@@ -85,7 +85,9 @@ class Command(BaseCommand):
                 question_tags.append(
                     through_model(question_id=question.id, tag_id=tag.id)
                 )
-        through_model.objects.bulk_create(question_tags, ignore_conflicts=True)
+        through_model.objects.bulk_create(
+            question_tags, ignore_conflicts=True, batch_size=10000
+        )
         self.stdout.write(f"Added tags to questions")
 
         self.stdout.write("Creating answers...")
@@ -98,7 +100,7 @@ class Command(BaseCommand):
                     user=random.choice(users),
                 )
             )
-        Answer.objects.bulk_create(answers)
+        Answer.objects.bulk_create(answers, batch_size=10000)
         answers = list(Answer.objects.all())
         self.stdout.write(f"Created {len(answers)} answers")
 
@@ -115,7 +117,9 @@ class Command(BaseCommand):
                 question_likes_objects.append(
                     QuestionLike(user_id=user.id, question_id=question.id)
                 )
-        QuestionLike.objects.bulk_create(question_likes_objects, ignore_conflicts=True)
+        QuestionLike.objects.bulk_create(
+            question_likes_objects, ignore_conflicts=True, batch_size=10000
+        )
         self.stdout.write(f"Created {len(question_likes_objects)} question likes")
 
         self.stdout.write("Creating answer likes...")
@@ -131,7 +135,9 @@ class Command(BaseCommand):
                 answer_likes_objects.append(
                     AnswerLike(user_id=user.id, answer_id=answer.id)
                 )
-        AnswerLike.objects.bulk_create(answer_likes_objects, ignore_conflicts=True)
+        AnswerLike.objects.bulk_create(
+            answer_likes_objects, ignore_conflicts=True, batch_size=10000
+        )
         self.stdout.write(f"Created {len(answer_likes_objects)} answers likes")
 
         self.stdout.write(self.style.SUCCESS("Done!"))

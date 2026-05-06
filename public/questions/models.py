@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class QuestionManager(models.Manager):
     def new(self):
-        return self.order_by("-created_at")
+        return self.annotate(likes_count=models.Count("likes")).order_by("-created_at")
 
     def best(self):
         return self.annotate(likes_count=models.Count("likes")).order_by("-likes_count")
