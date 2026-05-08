@@ -1,6 +1,8 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 from .models import Question, Tag
+from django.db.models import Count
+from .utils import paginate
 
 
 class IndexView(ListView):
@@ -27,9 +29,11 @@ class TagView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
+
         self.tag = get_object_or_404(Tag, slug=self.kwargs["tag_name"])
         return (
-            self.tag.questions.order_by("-created_at")
+            self.tag.questions.annotate(likes_count=Count("likes"))
+            .order_by("-created_at")
             .prefetch_related("tags")
             .select_related("user")
         )
@@ -45,15 +49,22 @@ class QuestionView(DetailView):
     context_object_name = "question"
 
     def get_object(self):
+
         return get_object_or_404(
-            Question.objects.prefetch_related("tags").select_related("user"),
+            Question.objects.annotate(likes_count=Count("likes"))
+            .prefetch_related("tags")
+            .select_related("user"),
             id=self.kwargs["question_id"],
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        answers = self.object.answers.select_related("user").order_by("-created_at")
-        from .utils import paginate
+
+        answers = (
+            self.object.answers.select_related("user")
+            .annotate(likes_count=Count("likes"))
+            .order_by("-created_at")
+        )
 
         page = paginate(answers, self.request)
         context["page_answer"] = page.object_list
