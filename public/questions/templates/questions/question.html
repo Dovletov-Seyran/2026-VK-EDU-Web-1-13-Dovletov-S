@@ -1,28 +1,24 @@
 {% extends 'base.html' %}
 {% block title %}AskPupkin — {{ question.title }}{% endblock %}
 
-{% block navbar_right %}
-<div class="d-flex gap-3">
-  <a href="{% url 'core:login' %}" class="nav-link-white">log in</a>
-  <a href="{% url 'core:signup' %}" class="nav-link-white">register</a>
-</div>
-{% endblock %}
-
 {% block content %}
 
 <div class="white-card">
   <div class="d-flex gap-3 align-items-start">
     <div class="vote-box flex-shrink-0">
+      {% if user.is_authenticated %}
       <button>▲</button>
       <span>{{ question.likes_count }}</span>
       <button>▼</button>
+      {% else %}
+      <button disabled title="Войдите, чтобы голосовать">▲</button>
+      <span>{{ question.likes_count }}</span>
+      <button disabled title="Войдите, чтобы голосовать">▼</button>
+      {% endif %}
     </div>
     <div class="q-avatar flex-shrink-0">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
-        <rect x="2" y="2" width="20" height="20" rx="2" />
-        <line x1="2" y1="2" x2="22" y2="22" />
-        <line x1="22" y1="2" x2="2" y2="22" />
-      </svg>
+      <img src="{{ question.user.profile.avatar_url }}" width="24" height="24"
+        style="border-radius: 4px; object-fit: cover;">
     </div>
     <div class="flex-grow-1">
       <h5 class="page-title">{{ question.title }}</h5>
@@ -41,26 +37,31 @@
 <hr class="section-divider" id="answers">
 
 {% for answer in page_answer %}
-<div class="white-card correct">
+<div class="white-card {% if answer.accepted %}correct{% endif %}" id="answer-{{ answer.id }}">
   <div class="d-flex gap-3 align-items-start">
     <div class="vote-box flex-shrink-0">
+      {% if user.is_authenticated %}
       <button>▲</button>
       <span>{{ answer.likes_count }}</span>
       <button>▼</button>
+      {% else %}
+      <button disabled title="Войдите, чтобы голосовать">▲</button>
+      <span>{{ answer.likes_count }}</span>
+      <button disabled title="Войдите, чтобы голосовать">▼</button>
+      {% endif %}
     </div>
     <div class="q-avatar flex-shrink-0">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
-        <rect x="2" y="2" width="20" height="20" rx="2" />
-        <line x1="2" y1="2" x2="22" y2="22" />
-        <line x1="22" y1="2" x2="2" y2="22" />
-      </svg>
+      <img src="{{ answer.user.profile.avatar_url }}" width="24" height="24"
+        style="border-radius: 4px; object-fit: cover;">
     </div>
     <div class="flex-grow-1">
       <p class="answer-text">{{ answer.text }}</p>
       <span class="q-time">answered {{ answer.created_at|timesince }} ago</span>
+      {% if answer.accepted %}
       <label class="correct-label is-correct">
-        <input type="checkbox" class="correct-checkbox" checked> Correct!
+        <input type="checkbox" class="correct-checkbox" checked disabled> Correct!
       </label>
+      {% endif %}
     </div>
   </div>
 </div>
@@ -73,9 +74,19 @@
 {% include 'includes/pagination.html' %}
 
 <div class="white-card">
-  <form method="post" action="#">
-    <textarea class="field mb-3" name="text" placeholder="Enter your answer here.."></textarea>
+  {% if user.is_authenticated %}
+  <form method="post" action="{% url 'questions:question' question.id %}">
+    {% csrf_token %}
+    {{ form.text }}
+    {% for error in form.text.errors %}
+    <div class="field-error">{{ error }}</div>
+    {% endfor %}
     <button type="submit" class="btn-main">Answer</button>
   </form>
+  {% else %}
+  <p>
+    <a href="{% url 'core:login' %}?next=/question/{{ question.id }}/">Войдите</a>, чтобы оставить ответ.
+  </p>
+  {% endif %}
 </div>
 {% endblock %}

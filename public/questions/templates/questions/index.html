@@ -1,35 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}AskPupkin — Вопросы{% endblock %}
-{%block navbar_right %}
-<div class="d-flex align-items-center gap-2">
-  <div class="nav-avatar">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
-      <rect x="2" y="2" width="20" height="20" rx="2" />
-      <line x1="2" y1="2" x2="22" y2="22" />
-      <line x1="22" y1="2" x2="2" y2="22" />
-    </svg>
-  </div>
-  <div>
-    <div class="nav-username">Dr. Pepper</div>
-    <div>
-      <a href="{% url 'core:profile' %}" class="nav-link-white">settings</a>
-      <a href="#" class="nav-link-white">log out</a>
-    </div>
-  </div>
-</div>
-{% endblock %} {% block content %}
+
+{% block content %}
 <div class="d-flex align-items-baseline gap-3 mb-3">
   <h4 class="page-title m-0">New Questions</h4>
   <a href="{% url 'questions:hot' %}" class="hot-link">Hot Questions</a>
 </div>
-
 
 {% for question in questions %}
 {% include 'includes/question_card.html' %}
 {% empty %}
 <p>Пока нет ни одного вопроса.</p>
 {% endfor %}
-
 
 {% include 'includes/pagination.html' %}
 {% endblock %}

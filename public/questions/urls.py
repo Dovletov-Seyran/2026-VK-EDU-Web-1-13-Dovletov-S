@@ -9,4 +9,5 @@ urlpatterns = [
     path("question/<int:question_id>/", views.QuestionView.as_view(), name="question"),
     path("tag/<str:tag_name>/", views.TagView.as_view(), name="tag"),
     path("hot/", views.HotView.as_view(), name="hot"),
+    path("user/<str:username>/", views.UserView.as_view(), name="user"),
 ]

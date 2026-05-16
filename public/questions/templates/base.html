@@ -23,10 +23,26 @@
           </a>
         </form>
         {% block navbar_right %}
+        {% if user.is_authenticated %}
+        <div class="d-flex align-items-center gap-2">
+          <div class="nav-avatar">
+            <img src="{{ user.profile.avatar_url }}" width="20" height="20"
+              style="border-radius: 4px; object-fit: cover;">
+          </div>
+          <div>
+            <div class="nav-username">{{ user.username }}</div>
+            <div>
+              <a href="{% url 'core:profile' %}" class="nav-link-white">settings</a>
+              <a href="{% url 'core:logout' %}" class="nav-link-white">log out</a>
+            </div>
+          </div>
+        </div>
+        {% else %}
         <div class="d-flex gap-3">
           <a href="{% url 'core:login' %}" class="nav-link-white">log in</a>
           <a href="{% url 'core:signup' %}" class="nav-link-white">register</a>
         </div>
+        {% endif %}
         {% endblock %}
       </div>
     </nav>
@@ -49,7 +65,7 @@
           <div class="sidebar-card">
             <h5>Best Members</h5>
             {% for member in best_members %}
-            <a href="#" class="member-link">{{ member.username }}</a>
+            <a href="{% url 'questions:user' member.username %}" class="member-link">{{ member.username }}</a>
             {% endfor %}
           </div>
         </div>
