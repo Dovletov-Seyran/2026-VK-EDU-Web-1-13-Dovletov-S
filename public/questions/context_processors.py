@@ -1,4 +1,5 @@
-from .models import Tag, Question
+from .models import Tag
+from django.contrib.auth.models import User
 
 
 def popular_tags(request):
@@ -7,7 +8,6 @@ def popular_tags(request):
 
 
 def best_members(request):
-    from django.contrib.auth.models import User
 
     members = User.objects.order_by("-id")[:5]
     return {"best_members": members}

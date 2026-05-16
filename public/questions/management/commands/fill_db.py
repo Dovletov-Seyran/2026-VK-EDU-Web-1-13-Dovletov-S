@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from core.models import Profile
 from questions.models import Question, Answer, Tag, QuestionLike, AnswerLike
 from faker import Faker
+from django.core.management import call_command
 
 fake = Faker()
 
@@ -17,6 +18,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         ratio = options["ratio"]
+
+        self.stdout.write("Checking migrations...")
+        call_command("migrate")
+
         self.stdout.write("Clearing old data...")
         AnswerLike.objects.all().delete()
         QuestionLike.objects.all().delete()
