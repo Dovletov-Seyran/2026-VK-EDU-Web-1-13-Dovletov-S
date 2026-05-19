@@ -3,30 +3,47 @@
 
 {% block content %}
 <h4 class="page-title">Log In</h4>
+
+{% if form.non_field_errors %}
 <div class="form-error">
-  Sorry, wrong password!
+  {% for error in form.non_field_errors %}
+  {{ error }}
+  {% endfor %}
 </div>
+{% endif %}
+
 <div class="white-card">
-  <form method="post" action="#">
+  <form method="post" action="{% url 'core:login' %}">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+
     <div class="row align-items-start mb-3 g-2">
       <div class="col-auto form-label-col">Login</div>
       <div class="col">
-        <input class="field" type="text" name="username" placeholder="Enter your login here" />
+        {{ form.username }}
+        {% for error in form.username.errors %}
+        <div class="field-error">{{ error }}</div>
+        {% endfor %}
       </div>
     </div>
+
     <div class="row align-items-start mb-3 g-2">
       <div class="col-auto form-label-col">Password</div>
       <div class="col">
-        <input class="field" type="password" name="password" value="••••••••" />
+        {{ form.password }}
+        {% for error in form.password.errors %}
+        <div class="field-error">{{ error }}</div>
+        {% endfor %}
       </div>
     </div>
+
     <div class="row g-2">
       <div class="col-auto form-label-col"></div>
       <div class="col d-flex flex-column gap-2">
         <div>
           <button type="submit" class="btn-main">Log in!</button>
         </div>
-        <a href="#" class="answer-link">create new account</a>
+        <a href="{% url 'core:signup' %}" class="answer-link">create new account</a>
       </div>
     </div>
   </form>

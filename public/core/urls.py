@@ -2,10 +2,11 @@ from django.urls import path
 
 from . import views
 
-app_name = 'core'
+app_name = "core"
 
 urlpatterns = [
-    path("profile/", views.profile, name="profile"),
-    path("login/", views.login, name="login"),
-    path("signup/", views.signup, name="signup")
+    path("login/", views.LoginView.as_view(), name="login"),
+    path("signup/", views.SignupView.as_view(), name="signup"),
+    path("logout/", views.LogoutView.as_view(), name="logout"),
+    path("profile/", views.ProfileView.as_view(), name="profile"),
 ]
