@@ -1,5 +1,6 @@
 import random
 from django.core.management.base import BaseCommand
+from django.core.management import call_command
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from core.models import Profile
@@ -10,13 +11,30 @@ fake = Faker()
 
 
 class Command(BaseCommand):
-    help = "Fill database with test data"
+    help = "Fill database with data"
 
     def add_arguments(self, parser):
         parser.add_argument("ratio", type=int, help="Coefficient for data generation")
 
     def handle(self, *args, **options):
         ratio = options["ratio"]
+
+        self.stdout.write("Checking migrations...")
+        call_command("migrate")
+
+        self.clear_data()
+        users = self.create_users(ratio)
+        self.create_profiles(users)
+        tags = self.create_tags(ratio)
+        questions = self.create_questions(ratio, users)
+        self.add_tags_to_questions(questions, tags)
+        answers = self.create_answers(ratio, questions, users)
+        self.create_question_likes(ratio, users, questions)
+        self.create_answer_likes(ratio, users, answers)
+
+        self.stdout.write(self.style.SUCCESS("Done!"))
+
+    def clear_data(self):
         self.stdout.write("Clearing old data...")
         AnswerLike.objects.all().delete()
         QuestionLike.objects.all().delete()
@@ -26,6 +44,7 @@ class Command(BaseCommand):
         Profile.objects.all().delete()
         User.objects.filter(is_superuser=False).delete()
 
+    def create_users(self, ratio):
         self.stdout.write("Creating users...")
         users = []
         for i in range(ratio):
@@ -39,28 +58,26 @@ class Command(BaseCommand):
         User.objects.bulk_create(users, batch_size=10000)
         users = list(User.objects.all())
         self.stdout.write(f"Created {len(users)} users")
+        return users
 
+    def create_profiles(self, users):
         self.stdout.write("Creating profiles...")
-        profiles = []
-        for user in users:
-            profiles.append(Profile(user=user))
+        profiles = [Profile(user=user) for user in users]
         Profile.objects.bulk_create(profiles, batch_size=10000)
         self.stdout.write(f"Created {len(profiles)} profiles")
 
+    def create_tags(self, ratio):
         self.stdout.write("Creating tags...")
         tags = []
         for i in range(ratio):
             title = f"{fake.word()}_{i}"
-            tags.append(
-                Tag(
-                    title=title,
-                    slug=slugify(title),
-                )
-            )
+            tags.append(Tag(title=title, slug=slugify(title)))
         Tag.objects.bulk_create(tags, batch_size=10000)
         tags = list(Tag.objects.all())
         self.stdout.write(f"Created {len(tags)} tags")
+        return tags
 
+    def create_questions(self, ratio, users):
         self.stdout.write("Creating questions...")
         questions = []
         for i in range(ratio * 10):
@@ -75,12 +92,14 @@ class Command(BaseCommand):
         Question.objects.bulk_create(questions, batch_size=10000)
         questions = list(Question.objects.all())
         self.stdout.write(f"Created {len(questions)} questions")
+        return questions
 
+    def add_tags_to_questions(self, questions, tags):
         self.stdout.write("Adding tags to questions...")
         through_model = Question.tags.through
         question_tags = []
         for question in questions:
-            random_tags = random.sample(tags, k=(min(3, len(tags))))
+            random_tags = random.sample(tags, k=min(3, len(tags)))
             for tag in random_tags:
                 question_tags.append(
                     through_model(question_id=question.id, tag_id=tag.id)
@@ -88,8 +107,9 @@ class Command(BaseCommand):
         through_model.objects.bulk_create(
             question_tags, ignore_conflicts=True, batch_size=10000
         )
-        self.stdout.write(f"Added tags to questions")
+        self.stdout.write("Added tags to questions")
 
+    def create_answers(self, ratio, questions, users):
         self.stdout.write("Creating answers...")
         answers = []
         for i in range(ratio * 100):
@@ -103,7 +123,9 @@ class Command(BaseCommand):
         Answer.objects.bulk_create(answers, batch_size=10000)
         answers = list(Answer.objects.all())
         self.stdout.write(f"Created {len(answers)} answers")
+        return answers
 
+    def create_question_likes(self, ratio, users, questions):
         self.stdout.write("Creating question likes...")
         question_likes = set()
         question_likes_objects = []
@@ -122,6 +144,7 @@ class Command(BaseCommand):
         )
         self.stdout.write(f"Created {len(question_likes_objects)} question likes")
 
+    def create_answer_likes(self, ratio, users, answers):
         self.stdout.write("Creating answer likes...")
         answer_likes = set()
         answer_likes_objects = []
@@ -138,6 +161,4 @@ class Command(BaseCommand):
         AnswerLike.objects.bulk_create(
             answer_likes_objects, ignore_conflicts=True, batch_size=10000
         )
-        self.stdout.write(f"Created {len(answer_likes_objects)} answers likes")
-
-        self.stdout.write(self.style.SUCCESS("Done!"))
+        self.stdout.write(f"Created {len(answer_likes_objects)} answer likes")
