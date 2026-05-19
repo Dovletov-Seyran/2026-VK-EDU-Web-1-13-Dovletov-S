@@ -1,36 +1,76 @@
-from django.shortcuts import render
-from .utils import paginate
+from django.views.generic import ListView, DetailView
+from django.shortcuts import get_object_or_404
+from django.db.models import Count
+from .models import Question, Tag
 
 
-def index(request):
-    questions = [
-        {'id': i, 'title': f'Question {i}', 'text': f'Text of question {i}'}
-        for i in range(1, 20)
-    ]
-    page = paginate(questions, request)
-    return render(request, "questions/index.html", {'page': page})
+class IndexView(ListView):
+    template_name = "questions/index.html"
+    context_object_name = "questions"
+    paginate_by = 5
 
-def question(request, question_id):
-    question = {'id': question_id, 'title': f'Question {question_id}', 'text': 'Some text'}
-    answers = [{'id': i, 'text': f'Answer {i}'} for i in range(1, 5)]
-    page = paginate(answers, request)
-    return render(request, "questions/question.html", {'question': question, 'page_answer': page.object_list, 'page': page})
+    def get_queryset(self):
+        return Question.objects.new().prefetch_related("tags").select_related("user")
 
-def tag(request, tag_name):
-    questions = [
-        {'id': i, 'title': f'Question about {tag_name} #{i}', 'text': f'Text {i}'}
-        for i in range(1, 20)
-    ]
-    page = paginate(questions, request)
-    return render(request, "questions/tag.html", {'page': page, 'tag': tag_name})
 
-def hot(request):
-    questions = [
-        {'id': i, 'title': f'Hot Question {i}', 'text': f'Text of hot question {i}'}
-        for i in range(1, 20)
-    ]
-    page = paginate(questions, request)
-    return render(request, "questions/hot.html", {'page': page})
+class HotView(ListView):
+    template_name = "questions/hot.html"
+    context_object_name = "questions"
+    paginate_by = 5
 
-def ask(request):
-    return render(request, "questions/ask.html")
+    def get_queryset(self):
+        return Question.objects.best().prefetch_related("tags").select_related("user")
+
+
+class TagView(ListView):
+    template_name = "questions/tag.html"
+    context_object_name = "questions"
+    paginate_by = 5
+
+    def get_queryset(self):
+        self.tag = get_object_or_404(Tag, slug=self.kwargs["tag_name"])
+        return (
+            self.tag.questions.annotate(likes_count=Count("likes"))
+            .order_by("-created_at")
+            .prefetch_related("tags")
+            .select_related("user")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tag"] = self.tag
+        return context
+
+
+class QuestionView(DetailView):
+    template_name = "questions/question.html"
+    context_object_name = "question"
+
+    def get_object(self):
+        return get_object_or_404(
+            Question.objects.annotate(likes_count=Count("likes"))
+            .prefetch_related("tags")
+            .select_related("user"),
+            id=self.kwargs["question_id"],
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        answers = (
+            self.object.answers.select_related("user")
+            .annotate(likes_count=Count("likes"))
+            .order_by("-created_at")
+        )
+        from .utils import paginate
+
+        page = paginate(answers, self.request)
+        context["page_answer"] = page.object_list
+        context["page"] = page
+        return context
+
+
+class AskView(ListView):
+    template_name = "questions/ask.html"
+
+    def get_queryset(self):
+        return Question.objects.none()
