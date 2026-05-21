@@ -1,13 +1,20 @@
 from django.views.generic import ListView, DetailView, FormView, View
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
 
-from .models import Question, Tag
+from .models import Question, Tag, QuestionLike, AnswerLike, Answer, LIKE, DISLIKE
 from .forms import QuestionForm, AnswerForm
 from .utils import paginate
 
 from django.contrib.auth.models import User
+
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+import json
 
 
 class IndexView(ListView):
@@ -36,7 +43,7 @@ class TagView(ListView):
     def get_queryset(self):
         self.tag = get_object_or_404(Tag, slug=self.kwargs["tag_name"])
         return (
-            self.tag.questions.annotate(likes_count=Count("likes"))
+            self.tag.questions.annotate(likes_count=Coalesce(Sum("likes__vote"), 0))
             .order_by("-created_at")
             .prefetch_related("tags")
             .select_related("user")
@@ -61,7 +68,7 @@ class AskView(LoginRequiredMixin, FormView):
 class QuestionView(View):
     def get_question(self, question_id):
         return get_object_or_404(
-            Question.objects.annotate(likes_count=Count("likes"))
+            Question.objects.annotate(likes_count=Coalesce(Sum("likes__vote"), 0))
             .prefetch_related("tags")
             .select_related("user"),
             id=question_id,
@@ -70,7 +77,7 @@ class QuestionView(View):
     def get_context(self, question, form, request):
         answers = (
             question.answers.select_related("user")
-            .annotate(likes_count=Count("likes"))
+            .annotate(likes_count=Coalesce(Sum("likes__vote"), 0))
             .order_by("-created_at")
         )
         page = paginate(answers, request)
@@ -98,7 +105,7 @@ class QuestionView(View):
             answer = form.save(user=request.user, question=question)
             answers = (
                 question.answers.select_related("user")
-                .annotate(likes_count=Count("likes"))
+                .annotate(likes_count=Coalesce(Sum("likes__vote"), 0))
                 .order_by("-created_at")
             )
             answers_ids = list(answers.values_list("id", flat=True))
@@ -125,7 +132,7 @@ class UserView(ListView):
         self.profile_user = get_object_or_404(User, username=self.kwargs["username"])
         return (
             Question.objects.filter(user=self.profile_user)
-            .annotate(likes_count=Count("likes"))
+            .annotate(likes_count=Coalesce(Sum("likes__vote"), 0))
             .order_by("-created_at")
             .prefetch_related("tags")
             .select_related("user")
@@ -135,3 +142,112 @@ class UserView(ListView):
         context = super().get_context_data(**kwargs)
         context["profile_user"] = self.profile_user
         return context
+
+
+@login_required
+@require_POST
+def question_vote(request):
+    try:
+        data = json.loads(request.body)
+        question_id = data.get("question_id")
+        vote = data.get("vote")
+    except (json.JSONDecodeError, KeyError):
+        return JsonResponse({"error": "Невалидные данные"}, status=400)
+
+    if vote not in (LIKE, DISLIKE):
+        return JsonResponse({"error": "Неверный тип голоса"}, status=400)
+
+    try:
+        question = Question.objects.get(id=question_id)
+    except Question.DoesNotExist:
+        return JsonResponse({"error": "Вопрос не найден"}, status=404)
+
+    user_vote = 0
+
+    try:
+        like = QuestionLike.objects.get(user=request.user, question=question)
+        if like.vote == vote:
+            user_vote = vote
+        else:
+            like.delete()
+            user_vote = 0
+    except QuestionLike.DoesNotExist:
+        QuestionLike.objects.create(user=request.user, question=question, vote=vote)
+        user_vote = vote
+
+    rating = QuestionLike.objects.filter(question=question).aggregate(
+        total=Coalesce(Sum("vote"), 0)
+    )["total"]
+
+    return JsonResponse({"rating": rating, "user_vote": user_vote})
+
+
+@login_required
+@require_POST
+def answer_vote(request):
+    try:
+        data = json.loads(request.body)
+        answer_id = data.get("answer_id")
+        vote = data.get("vote")
+    except (json.JSONDecodeError, KeyError):
+        return JsonResponse({"error": "Невалидные данные"}, status=400)
+
+    if vote not in (LIKE, DISLIKE):
+        return JsonResponse({"error": "Неверный тип голоса"}, status=400)
+
+    try:
+        answer = Answer.objects.get(id=answer_id)
+    except Answer.DoesNotExist:
+        return JsonResponse({"error": "Ответ не найден"}, status=404)
+
+    user_vote = 0
+
+    try:
+        like = AnswerLike.objects.get(user=request.user, answer=answer)
+        if like.vote == vote:
+            user_vote = vote
+        else:
+            like.delete()
+            user_vote = 0
+    except AnswerLike.DoesNotExist:
+        AnswerLike.objects.create(user=request.user, answer=answer, vote=vote)
+        user_vote = vote
+
+    rating = AnswerLike.objects.filter(answer=answer).aggregate(
+        total=Coalesce(Sum("vote"), 0)
+    )["total"]
+
+    return JsonResponse({"rating": rating, "user_vote": user_vote})
+
+
+@login_required
+@require_POST
+def accept_answer(request):
+    try:
+        data = json.loads(request.body)
+        answer_id = data.get("answer_id")
+    except (json.JSONDecodeError, KeyError):
+        return JsonResponse({"error": "Невалидные данные"}, status=400)
+
+    try:
+        answer = Answer.objects.select_related("question").get(id=answer_id)
+    except Answer.DoesNotExist:
+        return JsonResponse({"error": "Ответ не найден"}, status=404)
+
+    if answer.question.user != request.user:
+        return JsonResponse(
+            {"error": "Только автор вопроса может выбирать правильный ответ"},
+            status=403,
+        )
+
+    if answer.accepted:
+        answer.accepted = False
+        answer.save()
+    else:
+        Answer.objects.filter(question=answer.question, accepted=True).update(
+            accepted=False
+        )
+        answer.accepted = True
+        answer.save()
+
+    return JsonResponse({"accepted": answer.accepted})

@@ -1,3 +1,5 @@
+import os
+
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -5,6 +7,23 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 from .models import Profile
+
+ALLOWED_AVATAR_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
+MAX_AVATAR_SIZE = 5 * 1024 * 1024  # 5 мб в байтах
+
+
+def validate_avatar(file):
+    if file is None:
+        return
+
+    ext = os.path.splitext(file.name)[1].lower()
+    if ext not in ALLOWED_AVATAR_EXTENSIONS:
+        allowed = ", ".join(sorted(ALLOWED_AVATAR_EXTENSIONS))
+        raise ValidationError(
+            f"Недопустимый формат файлы ({ext}). Разрешены: {allowed}"
+        )
+    if file.size > MAX_AVATAR_SIZE:
+        raise ValidationError(f"Файл слишком большой. Максимальный размер: 5 Мб.")
 
 
 class LoginForm(forms.Form):
@@ -110,6 +129,11 @@ class SignupForm(forms.ModelForm):
             raise ValidationError("Этот email уже зарегистрирован.")
         return email
 
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get("avatar")
+        validate_avatar(avatar)
+        return avatar
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])
@@ -151,6 +175,11 @@ class ProfileForm(forms.ModelForm):
         ):
             raise ValidationError("Этот email уже используется другим пользователем.")
         return email
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get("avatar")
+        validate_avatar(avatar)
+        return avatar
 
     def save(self, commit=True):
         user = super().save(commit=commit)

@@ -65,6 +65,10 @@
             style="padding: 5px 14px; font-size: 13px; cursor: pointer; margin: 0;">choose</label>
           {{ form.avatar }}
         </div>
+        {% for error in form.avatar.errors %}
+        <div class="field-error">{{ error }}</div>
+        {% endfor %}
+
       </div>
     </div>
 

@@ -1,5 +1,15 @@
+import os
+import uuid
+
 from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.staticfiles.storage import staticfiles_storage
+
+
+def avatar_upload_to(instance, filename):
+    ext = os.path.splitext(filename)[1].lower()
+    new_filename = f"{uuid.uuid4()}{ext}"
+    return f"avatar/{new_filename}"
 
 
 class Profile(models.Model):
@@ -10,7 +20,7 @@ class Profile(models.Model):
         verbose_name="Пользователь",
     )
     avatar = models.ImageField(
-        upload_to="avatars/", blank=True, null=True, verbose_name="Аватарка"
+        upload_to=avatar_upload_to, blank=True, null=True, verbose_name="Аватарка"
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
@@ -23,7 +33,7 @@ class Profile(models.Model):
     def avatar_url(self):
         if self.avatar:
             return self.avatar.url
-        return "/static/images/default_ava.jpg"
+        return staticfiles_storage.url("images/default_ava.jpg")
 
     def __str__(self):
         return self.user.username

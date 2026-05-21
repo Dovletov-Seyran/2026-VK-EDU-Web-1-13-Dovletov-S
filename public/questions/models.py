@@ -1,15 +1,27 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django.urls import reverse
 
+LIKE = 1
+DISLIKE = -1
+VOTE_CHOICES = [
+    (LIKE, "Лайк"),
+    (DISLIKE, "Дизлайк"),
+]
+
 
 class QuestionManager(models.Manager):
+    def _with_rating(self):
+        return self.annotate(likes_count=Coalesce(Sum("likes__vote"), 0))
+
     def new(self):
-        return self.annotate(likes_count=models.Count("likes")).order_by("-created_at")
+        return self._with_rating().order_by("-created_at")
 
     def best(self):
-        return self.annotate(likes_count=models.Count("likes")).order_by("-likes_count")
+        return self._with_rating().order_by("-likes_count")
 
 
 class Tag(models.Model):
@@ -89,6 +101,7 @@ class QuestionLike(models.Model):
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, related_name="likes", verbose_name="Вопрос"
     )
+    vote = models.SmallIntegerField(choices=VOTE_CHOICES, verbose_name="Голос")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     class Meta:
@@ -107,9 +120,12 @@ class AnswerLike(models.Model):
         related_name="answer_likes",
         verbose_name="Пользователь",
     )
+
     answer = models.ForeignKey(
         Answer, on_delete=models.CASCADE, related_name="likes", verbose_name="Ответ"
     )
+
+    vote = models.SmallIntegerField(choices=VOTE_CHOICES, verbose_name="Голос")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     class Meta:

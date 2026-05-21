@@ -5,14 +5,14 @@
 
 <div class="white-card">
   <div class="d-flex gap-3 align-items-start">
-    <div class="vote-box flex-shrink-0">
+    <div class="vote-box flex-shrink-0" data-type="question" data-id="{{ question.id }}">
       {% if user.is_authenticated %}
-      <button>▲</button>
-      <span>{{ question.likes_count }}</span>
-      <button>▼</button>
+      <button class="vote-btn" data-vote="1">▲</button>
+      <span class="vote-count">{{ question.likes_count }}</span>
+      <button class="vote-btn" data-vote="-1">▼</button>
       {% else %}
       <button disabled title="Войдите, чтобы голосовать">▲</button>
-      <span>{{ question.likes_count }}</span>
+      <span class="vote-count">{{ question.likes_count }}</span>
       <button disabled title="Войдите, чтобы голосовать">▼</button>
       {% endif %}
     </div>
@@ -39,14 +39,14 @@
 {% for answer in page_answer %}
 <div class="white-card {% if answer.accepted %}correct{% endif %}" id="answer-{{ answer.id }}">
   <div class="d-flex gap-3 align-items-start">
-    <div class="vote-box flex-shrink-0">
+    <div class="vote-box flex-shrink-0" data-type="answer" data-id="{{ answer.id }}">
       {% if user.is_authenticated %}
-      <button>▲</button>
-      <span>{{ answer.likes_count }}</span>
-      <button>▼</button>
+      <button class="vote-btn" data-vote="1">▲</button>
+      <span class="vote-count">{{ answer.likes_count }}</span>
+      <button class="vote-btn" data-vote="-1">▼</button>
       {% else %}
       <button disabled title="Войдите, чтобы голосовать">▲</button>
-      <span>{{ answer.likes_count }}</span>
+      <span class="vote-count">{{ answer.likes_count }}</span>
       <button disabled title="Войдите, чтобы голосовать">▼</button>
       {% endif %}
     </div>
@@ -57,10 +57,16 @@
     <div class="flex-grow-1">
       <p class="answer-text">{{ answer.text }}</p>
       <span class="q-time">answered {{ answer.created_at|timesince }} ago</span>
+      {% if user == question.user %}
+      <label class="correct-label {% if answer.accepted %}is-correct{% endif %}">
+        <input type="checkbox" class="correct-checkbox" data-answer-id="{{ answer.id }}" {% if answer.accepted %}checked{% endif %}> Правильный ответ
+      </label>
+      {% else %}
       {% if answer.accepted %}
       <label class="correct-label is-correct">
-        <input type="checkbox" class="correct-checkbox" checked disabled> Correct!
+        <input type="checkbox" class="correct-checkbox" checked disabled> Правильный ответ!
       </label>
+      {% endif %}
       {% endif %}
     </div>
   </div>

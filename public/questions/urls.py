@@ -10,4 +10,7 @@ urlpatterns = [
     path("tag/<str:tag_name>/", views.TagView.as_view(), name="tag"),
     path("hot/", views.HotView.as_view(), name="hot"),
     path("user/<str:username>/", views.UserView.as_view(), name="user"),
+    path("question/vote/", views.question_vote, name="question_vote"),
+    path("answer/vote/", views.answer_vote, name="answer_vote"),
+    path("answer/accept/", views.accept_answer, name="accept_answer"),
 ]
