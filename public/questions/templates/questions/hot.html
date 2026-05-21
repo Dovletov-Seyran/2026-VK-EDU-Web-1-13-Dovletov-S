@@ -1,74 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}AskPupkin — Hot Questions{% endblock %}
-{%block navbar_right %}
-<div class="d-flex align-items-center gap-2">
-  <div class="nav-avatar">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
-      <rect x="2" y="2" width="20" height="20" rx="2" />
-      <line x1="2" y1="2" x2="22" y2="22" />
-      <line x1="22" y1="2" x2="2" y2="22" />
-    </svg>
-  </div>
-  <div>
-    <div class="nav-username">Dr. Pepper</div>
-    <div>
-      <a href="{% url 'core:profile' %}" class="nav-link-white">settings</a>
-      <a href="#" class="nav-link-white">log out</a>
-    </div>
-  </div>
-</div>
-{% endblock %} {% block content %}
+
+{% block content %}
 <div class="d-flex align-items-baseline gap-3 mb-3">
   <h4 class="page-title m-0">Hot Questions</h4>
   <a href="{% url 'questions:home' %}" class="hot-link">New Questions</a>
 </div>
 
-{% for question in page %}
-<div class="question-card">
-  <div class="d-flex gap-3 align-items-start">
-    <div class="vote-box liked flex-shrink-0">
-      <button>▲</button>
-      <span>0</span>
-      <button>▼</button>
-    </div>
-    <div class="q-avatar flex-shrink-0">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7EBFBF" stroke-width="1.5">
-        <rect x="2" y="2" width="20" height="20" rx="2" />
-        <line x1="2" y1="2" x2="22" y2="22" />
-        <line x1="22" y1="2" x2="2" y2="22" />
-      </svg>
-    </div>
-    <div class="flex-grow-1">
-      <a href="{% url 'questions:question' question.id%}" class="q-title">{{ question.title }}</a>
-      <p class="q-text">{{ question.text }}</p>
-      <div class="d-flex align-items-center gap-2 flex-wrap">
-        <a href="#" class="answer-link">answer (47)</a>
-        <span class="tags-label">Tags:</span>
-        <a href="#" class="tag-link tag-python">python</a>
-        <a href="#" class="tag-link">beginner</a>
-        <span class="q-time">asked 1 hour ago</span>
-      </div>
-    </div>
-  </div>
-</div>
+{% for question in questions %}
+{% include 'includes/question_card.html' %}
+{% empty %}
+<p>Пока нет ни одного вопроса.</p>
 {% endfor %}
 
-
-<div class="d-flex gap-2 mt-3">
-  {% if page.has_previous %}
-  <button class="page-btn" onclick="window.location='?page={{ page.previous_page_number }}'">&#8592;</button>
-  {% endif %}
-
-  {% for num in page.paginator.page_range %}
-  {% if num == page.number %}
-  <button class="page-btn active">{{ num }}</button>
-  {% else %}
-  <button class="page-btn" onclick="window.location='?page={{ num }}'">{{ num }}</button>
-  {% endif %}
-  {% endfor %}
-
-  {% if page.has_next %}
-  <button class="page-btn" onclick="window.location='?page={{ page.next_page_number }}'">&#8594;</button>
-  {% endif %}
-</div>
+{% include 'includes/pagination.html' %}
 {% endblock %}

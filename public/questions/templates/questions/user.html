@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}AskPupkin — {{ profile_user.username }}{% endblock %}
+
+{% block content %}
+<h4 class="page-title">Questions by {{ profile_user.username }}</h4>
+
+{% for question in questions %}
+{% include 'includes/question_card.html' %}
+{% empty %}
+<p>У этого пользователя пока нет вопросов.</p>
+{% endfor %}
+
+{% include 'includes/pagination.html' %}
+{% endblock %}
