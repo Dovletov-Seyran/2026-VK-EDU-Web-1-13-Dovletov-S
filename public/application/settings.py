@@ -151,7 +151,7 @@ CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BROKER_DB}"
 CELERY_BEAT_SCHEDULER = "redbeat.RedBeatScheduler"
 CELERY_REDBEAT_REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BEAT_DB}"
 
-CELERY_BEAT_SCHEDULER = {
+CELERY_BEAT_SCHEDULE = {
     "update-popular-tags": {
         "task": "questions.tasks.update_popular_tags_cache",
         "schedule": 3600,
@@ -170,3 +170,12 @@ CENTRIFUGO_TOKEN_SECRET = os.getenv("CENTRIFUGO_TOKEN_SECRET", "my-token-secret"
 CENTRIFUGO_WS_URL = os.getenv(
     "CENTRIFUGO_WS_URL", "ws://localhost:8080/connection/websocket"
 )
+
+
+# Email
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 1025))
+EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@askpupkin.com")

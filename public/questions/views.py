@@ -16,7 +16,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 import json
 
-from .tasks import notify_new_answer
+from .tasks import notify_new_answer, send_new_answer_email
 
 import jwt
 import time
@@ -121,6 +121,14 @@ class QuestionView(View):
                     "created_at": answer.created_at.isoformat(),
                 },
             )
+
+            if question.user.email:
+                send_new_answer_email.delay(
+                    question_title=question.title,
+                    question_id=question.id,
+                    question_author_email=question.user.email,
+                    answer_username=request.user.username,
+                )
 
             answers = (
                 question.answers.select_related("user")

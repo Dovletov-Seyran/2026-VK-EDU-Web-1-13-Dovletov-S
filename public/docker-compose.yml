@@ -52,6 +52,13 @@ services:
       - ./centrifugo/config.json:/centrifugo/config.json
     command: centrifugo --config /centrifugo/config.json
 
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    restart: unless-stopped
+
   celery:
     build: .
     command: celery -A application worker --loglevel=info

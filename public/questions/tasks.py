@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 import requests
 import json
 from django.conf import settings
+from django.core.mail import send_mail
 
 
 @shared_task
@@ -74,3 +75,20 @@ def notify_new_answer(question_id, answer_data):
     )
 
     return f"Centrifugo response: {response.status_code}"
+
+
+@shared_task
+def send_new_answer_email(
+    question_title, question_id, question_author_email, answer_username
+):
+    send_mail(
+        subject=f'Новый ответ на ваш вопрос: "{question_title}"',
+        message=(
+            f"Пользователь {answer_username} ответил на ваш вопрос.\n"
+            f"Посмтреть: http://localhost:8000/question/{question_id}/"
+        ),
+        from_email=None,
+        recipient_list=[question_author_email],
+    )
+
+    return f"Email sent to {question_author_email}"
