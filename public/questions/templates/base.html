@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
   <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   <link rel="icon" href="{% static 'questions/img/favicon-32x32.png' %}" />
+  <script src="https://unpkg.com/centrifuge@5.2.2/dist/centrifuge.js"></script>
+  <script>
+    const CENTRIFUGO_WS_URL = "{{ CENTRIFUGO_WS_URL }}";
+  </script>
 </head>
 
 <body>
@@ -81,6 +85,8 @@
 
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
   <script src="{% static 'questions/js/votes.js' %}"></script>
+  <script src="{% static 'questions/js/centrifugo.js' %}"></script>
+</body>
 </body>
 
 </html>

@@ -16,6 +16,12 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 import json
 
+from .tasks import notify_new_answer
+
+import jwt
+import time
+from django.conf import settings
+
 
 class IndexView(ListView):
     template_name = "questions/index.html"
@@ -103,6 +109,19 @@ class QuestionView(View):
         form = AnswerForm(request.POST)
         if form.is_valid():
             answer = form.save(user=request.user, question=question)
+
+            # Отправляем уведомление в Centrifugo через Celery
+            notify_new_answer.delay(
+                question_id=question.id,
+                answer_data={
+                    "answer_id": answer.id,
+                    "text": answer.text,
+                    "username": request.user.username,
+                    "avatar_url": request.user.profile.avatar_url,
+                    "created_at": answer.created_at.isoformat(),
+                },
+            )
+
             answers = (
                 question.answers.select_related("user")
                 .annotate(likes_count=Coalesce(Sum("likes__vote"), 0))
@@ -251,3 +270,14 @@ def accept_answer(request):
         answer.save()
 
     return JsonResponse({"accepted": answer.accepted})
+
+
+def centrifugo_token(request):
+    payload = {
+        "sub": str(request.user.id) if request.user.is_authenticated else "anonymous",
+        "exp": int(time.time()) + 3600,
+    }
+
+    token = jwt.encode(payload, settings.CENTRIFUGO_TOKEN_SECRET, algorithm="HS256")
+
+    return JsonResponse({"token": token})

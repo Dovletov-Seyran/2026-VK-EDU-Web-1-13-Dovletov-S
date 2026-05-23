@@ -10,3 +10,5 @@ celery==5.4.0
 redis==5.2.1
 django-redis==5.4.0
 celery-redbeat==2.3.3
+PyJWT==2.9.0
+requests==2.32.3

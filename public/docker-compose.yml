@@ -44,6 +44,14 @@ services:
       timeout: 5s
       retries: 5
 
+  centrifugo:
+    image: centrifugo/centrifugo:v5
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./centrifugo/config.json:/centrifugo/config.json
+    command: centrifugo --config /centrifugo/config.json
+
   celery:
     build: .
     command: celery -A application worker --loglevel=info

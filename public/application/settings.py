@@ -54,6 +54,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "questions.context_processors.popular_tags",
                 "questions.context_processors.best_members",
+                "questions.context_processors.centrifugo_settings",
             ],
         },
     },
@@ -149,3 +150,23 @@ CELERY_RESULT_BACKEND = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BROKER_DB}"
 
 CELERY_BEAT_SCHEDULER = "redbeat.RedBeatScheduler"
 CELERY_REDBEAT_REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_BEAT_DB}"
+
+CELERY_BEAT_SCHEDULER = {
+    "update-popular-tags": {
+        "task": "questions.tasks.update_popular_tags_cache",
+        "schedule": 3600,
+    },
+    "update-best-members": {
+        "task": "questions.tasks.update_best_members_cache",
+        "schedule": 1800,
+    },
+}
+
+# Centrifugo
+
+CENTRIFUGO_API_URL = os.getenv("CENTRIFUGO_API_URL", "http://localhost:8080/api")
+CENTRIFUGO_API_KEY = os.getenv("CENTRIFUGO_API_KEY", "my-api-key")
+CENTRIFUGO_TOKEN_SECRET = os.getenv("CENTRIFUGO_TOKEN_SECRET", "my-token-secret")
+CENTRIFUGO_WS_URL = os.getenv(
+    "CENTRIFUGO_WS_URL", "ws://localhost:8080/connection/websocket"
+)

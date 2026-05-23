@@ -22,3 +22,5 @@ staticfiles/
 
 .env.local
 .env.docker
+
+public/centrifugo/config.json
