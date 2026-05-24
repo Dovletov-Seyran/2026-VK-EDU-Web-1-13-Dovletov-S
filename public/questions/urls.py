@@ -14,4 +14,5 @@ urlpatterns = [
     path("answer/vote/", views.answer_vote, name="answer_vote"),
     path("answer/accept/", views.accept_answer, name="accept_answer"),
     path("centrifugo/token/", views.centrifugo_token, name="centrifugo_token"),
+    path("search/", views.search_suggestions, name="search"),
 ]

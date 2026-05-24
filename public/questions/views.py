@@ -8,7 +8,7 @@ from .utils import paginate
 
 from django.contrib.auth.models import User
 
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.db.models.functions import Coalesce
 
 from django.http import JsonResponse
@@ -21,6 +21,8 @@ from .tasks import notify_new_answer, send_new_answer_email
 import jwt
 import time
 from django.conf import settings
+
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 
 class IndexView(ListView):
@@ -289,3 +291,45 @@ def centrifugo_token(request):
     token = jwt.encode(payload, settings.CENTRIFUGO_TOKEN_SECRET, algorithm="HS256")
 
     return JsonResponse({"token": token})
+
+
+def search_suggestions(request):
+    query = request.GET.get("q", "").strip()
+
+    if len(query) < 2:
+        return JsonResponse({"results": []})
+
+    # Полнотекстовый поиск
+    search_vector = SearchVector("title", "text", config="russian") + SearchVector(
+        "title", "text", config="english"
+    )
+    search_query = SearchQuery(query, config="russian") | SearchQuery(
+        query, config="english"
+    )
+
+    questions = list(
+        Question.objects.annotate(
+            rank=SearchRank(search_vector, search_query),
+        )
+        .filter(rank__gt=0)
+        .order_by("-rank")[:5]
+    )
+
+    # Если полнотекстовый поиск ничего не нашёл — ищем по вхождению
+    if not questions:
+        questions = list(
+            Question.objects.filter(
+                Q(title__icontains=query) | Q(text__icontains=query)
+            )[:5]
+        )
+
+    results = [
+        {
+            "id": q.id,
+            "title": q.title,
+            "url": f"/question/{q.id}/",
+        }
+        for q in questions
+    ]
+
+    return JsonResponse({"results": results})
