@@ -1,0 +1,17 @@
+<div class="d-flex gap-2 mt-3">
+    {% if page_obj.has_previous %}
+    <button class="page-btn" onclick="window.location='?page={{ page_obj.previous_page_number }}'">&#8592;</button>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+    {% if num == page_obj.number %}
+    <button class="page-btn active">{{ num }}</button>
+    {% elif num >= page_obj.number|add:"-3" and num <= page_obj.number|add:"3" %} <button class="page-btn"
+        onclick="window.location='?page={{ num }}'">{{ num }}</button>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <button class="page-btn" onclick="window.location='?page={{ page_obj.next_page_number }}'">&#8594;</button>
+        {% endif %}
+</div>
